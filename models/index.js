@@ -308,7 +308,12 @@ var Schemas = exports.Schemas = {
             join_cycle_click :    {type:Number, 'default':0,editable:false},
             facebook_joiners :    {type:Number, 'default':0,editable:false}
         }
-    } ,
+    },
+
+    Invites: new Schema({
+        email:   {type:String, required:true},
+        sent:    {type:Boolean, required:true},
+    }),
 
     PressItem:{
         title:  {type:String, required:true},
@@ -387,6 +392,8 @@ var Models = module.exports = {
     DailyDiscussion:mongoose.model('DailyDiscussion', new Schema(Schemas.DailyDiscussion, {strict:true})),
 
     Counter          :mongoose.model('Counter', new Schema(Schemas.Counter, {strict:true})),
+
+    Invites        :mongoose.model('Invites', Schemas.Invites),
 
     Schemas:Schemas,
     setDefaultPublish:function (is_publish) {

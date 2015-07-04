@@ -8,7 +8,8 @@
 var sys = require('util')
     ,mongoose = require('mongoose')
     ,common = require('./common')
-    ,middlewares = require('./middlewares');
+    ,middlewares = require('./middlewares')
+    ,config = require('../../config');
 
 exports.SimpleAuthentication = require('./authentication');
 exports.FbServerAuthentication = require('./fb_auth');
@@ -18,7 +19,9 @@ exports.populate_user = middlewares.populate_user;
 
 exports.routing = function(router)
 {
-    router.all('/register',require('./register'));
+    if (config.registration_enabled) {
+        router.all('/register',require('./register'));
+    }
 
     router.all('/login',require('./login'));
 

@@ -59,6 +59,7 @@ var mongoose_resource = require('jest'),
     UserMailNotificationConfig = require('./user_mail_notification_config_resource');
     PressItemResource = require('./PressItemResource'),
     SendMailResource =  require('./send_mail_resource'),
+    config = require('../config');
 
 module.exports = function(app)
 {
@@ -115,7 +116,9 @@ module.exports = function(app)
     rest_api.register_resource('user_mail_notification_config', new UserMailNotificationConfig());
 
     rest_api.register_resource('login', new LoginResource());
-    rest_api.register('register',new RegisterResource());
+    if (config.registration_enabled) {
+        rest_api.register('register',new RegisterResource());
+    }
     rest_api.register_resource('fb_connect', new FbConnectResource());
 
     rest_api.register_resource('items_count_by_tag_name', new ItemsCountByTagNameResource());

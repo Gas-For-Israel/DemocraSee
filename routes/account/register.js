@@ -1,8 +1,8 @@
 var models = require('../../models')
     ,sendActivationMail = require('./activation').sendActivationMail
     ,async = require('async')
-    , common = require('./common');
-
+    ,common = require('./common')
+    ,config = require('../../config');
 
 module.exports = {
     post:function (req, res) {
@@ -47,6 +47,10 @@ module.exports = {
  * function(err,user)
  */
 var registerUser = module.exports.registerUser = function(req,data,next,callback) {
+    if (!config.registration_enabled) {
+        callback('אינך מורשה להרשם לאתר זה');
+        return;
+    }
     var user = new models.User();
     user.email = (data.email || '').toLowerCase().trim();
     if ('full_name' in data) {

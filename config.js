@@ -27,6 +27,10 @@ config.sendgrid_user = process.env['SENDGRID_USERNAME'] || 'testuser';
 config.sendgrid_key = process.env['SENDGRID_PASSWORD'] || '12345';
 config.system_email = process.env['DEMOCRASEE_SYSTEM_EMAIL'] || 'democrasee@example.com';
 
+// global registration enable / disable. invitation is the alternate mechanism.
+registration_enabled = process.env['DEMOCRASEE_REGISTRATION_ENABLED']
+config.registration_enabled = registration_enabled ? registration_enabled == 'true' : false;
+
 config.MAIN_DISCUSSION = process.env['MAIN_DISCUSSION'] || '549ab39ada8a349714000026';
 
 config.DB_URL = process.env['MONGOLAB_URI'] || 'mongodb://localhost/idemos';

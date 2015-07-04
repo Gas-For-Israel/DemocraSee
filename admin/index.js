@@ -304,6 +304,8 @@ module.exports = function (app) {
     //});
 
     admin.registerAdminUserModel();
+
+    admin.registerMongooseModel('Invites', Models.Invites, null, {list: ['email', 'sent']});
 };
 
 var unApproveAction = function (id, callback) {
