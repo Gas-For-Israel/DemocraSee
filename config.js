@@ -2,8 +2,8 @@ var config = {};
 
 // facebook app params
 config.fb_auth_params = {
-    appId : process.env['FACEBOOK_APPID'] || 'your-facebook-app-id',
-    appSecret: process.env['FACEBOOK_SECRET'] || 'your-facebook-secret',
+    appId : process.env['FACEBOOK_APPID'] || 'testapp',
+    appSecret: process.env['FACEBOOK_SECRET'] || '12345',
     appName: process.env['FACEBOOK_APPNAME'] || 'DemocraSee',
     callback: config.ROOT_PATH + '/account/facebooklogin',
     scope: 'email,publish_actions',
@@ -18,14 +18,14 @@ config.fb_general_params = {
 
 // amazon s3 credentials
 config.s3_creds = {
-    key: 'your-s3-key',
-    secret: 'your-s3-secret',
-    bucket: 'idemos'
+    key: process.env['S3_KEY'] || 's3key',
+    secret: process.env['S3_SECRET'] || 's3secret',
+    bucket: process.env['S3_BUCKET'] || 's3bucket'
 };
 
-config.sendgrid_user = 'your-sendgrid-user';
-config.sendgrid_key = 'your-sendgrid-key';
-config.system_email = 'democrasee@example.com';
+config.sendgrid_user = process.env['SENDGRID_USERNAME'] || 'testuser';
+config.sendgrid_key = process.env['SENDGRID_PASSWORD'] || '12345';
+config.system_email = process.env['DEMOCRASEE_SYSTEM_EMAIL'] || 'democrasee@example.com';
 
 config.MAIN_DISCUSSION = process.env['MAIN_DISCUSSION'] || '549ab39ada8a349714000026';
 
