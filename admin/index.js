@@ -1,3 +1,5 @@
+"use strict"
+
 var mongoose_admin = require('formage-admin'),
     mongoose = require('mongoose'),
     Models = require('../models'),
