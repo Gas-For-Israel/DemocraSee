@@ -307,7 +307,11 @@ module.exports = function (app) {
 
     admin.registerAdminUserModel();
 
-    admin.registerMongooseModel('Invites', Models.Invites, null, {list: ['email', 'sent']});
+    admin.registerMongooseModel('Invites', Models.Invites, null,
+        {
+            list: ['email', 'sent'],
+            list_header: '<div><form enctype="multipart/form-data" action="/admin/invites-extra/load" method="post"><input name="file" type="file"/><input type="submit" value="Load"/></form></div><div><a href="/admin/invites-extra/invite">Invite</a></div>',
+        });
 };
 
 var unApproveAction = function (id, callback) {

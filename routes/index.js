@@ -1,3 +1,5 @@
+"use strict"
+
 var _ = require('underscore'),
     Navigation = require('./navigation'),
     InformationItems = require('./information_items'),
@@ -127,4 +129,6 @@ module.exports = function (app) {
     router.post('/agra', require('./cycles/main'));
 
     router.include('/facebook_realtime', require('./facebook_realtime'));
+
+    router.include('/admin/invites-extra', require('./invites'));
 };
