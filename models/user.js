@@ -1,3 +1,5 @@
+"use strict"
+
 var mongoose = require("mongoose"),
     Schema = mongoose.Schema,
     ObjectId = Schema.ObjectId,
@@ -165,7 +167,6 @@ User.methods.avatar_url = function()
     else
         return this.facebook_id ? 'http://graph.facebook.com/' + this.facebook_id + '/picture/?type=large' : "/images/default_user_img.gif";
 };
-
 //User.post('save', function () {
 //   console.log('user post save');
 //});
