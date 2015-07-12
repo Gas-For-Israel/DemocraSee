@@ -1,3 +1,5 @@
+"use strict"
+
 /**
  * Created by JetBrains WebStorm.
  * User: ishai
@@ -21,6 +23,8 @@ exports.routing = function(router)
 {
     if (config.registration_enabled) {
         router.all('/register',require('./register'));
+    } else {
+        router.all('/register', function (req, res) { res.redirect('/'); });
     }
 
     router.all('/login',require('./login'));
