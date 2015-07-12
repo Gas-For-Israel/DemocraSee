@@ -1,9 +1,11 @@
+"use strict"
+
 var models = require('../../models'),
     common = require('./common'),
     templates = require('../../lib/templates'),
     mail = require('../../lib/mail'),
-    async = require('async')
-    ,crypto = require('crypto');
+    async = require('async'),
+    crypto = require('crypto');
 
 module.exports = {
     get:function(req, res) {
@@ -37,7 +39,7 @@ module.exports = {
                 else
                     cbk('wrong code');
             }
-        ],function(err) {
+        ], function(err) {
             if(err)
                 res.render('activation.ejs',{
                     next: req.query.next,
@@ -47,7 +49,7 @@ module.exports = {
                     email:email || ''
                 });
             else {
-                var redirect_to = typeof next != 'undefined' && next ? next : common.DEFAULT_LOGIN_REDIRECT;
+                var redirect_to = typeof next !== 'undefined' && next ? next : common.DEFAULT_LOGIN_REDIRECT;
                 redirect_to = redirect_to.indexOf('?') > -1 ? redirect_to + '&is_new=activated' : redirect_to + '?is_new=activated';
                 res.redirect(redirect_to);
             }
@@ -116,8 +118,9 @@ var sendActivationMail = module.exports.sendActivationMail = function(user,next,
         function(buf,cbk) {
             var validation = buf.toString('hex');
 
-            if(!user.validation_code )
+            if(!user.validation_code ) {
                 user.validation_code = validation;
+            }
             cbk();
         },
         function(cbk) {
