@@ -1,3 +1,5 @@
+"use strict"
+
 var models = require('../../models')
     ,sendActivationMail = require('./activation').sendActivationMail
     ,async = require('async')
@@ -40,8 +42,8 @@ module.exports = {
 
 /**
  * Registers user and callbacks with a user object
- * @param req
- * @param data
+ * @param req: {session.referred_by?}
+ * @param data: {email,full_name|(first_name,last_name)}
  * @param next
  * @param callback
  * function(err,user)
@@ -51,66 +53,25 @@ var registerUser = module.exports.registerUser = function(req,data,next,callback
         callback('אינך מורשה להרשם לאתר זה');
         return;
     }
-    var user = new models.User();
-    user.email = (data.email || '').toLowerCase().trim();
-    if ('full_name' in data) {
-        var name_parts = data['full_name'].trim().split(' ');
-        user.first_name = name_parts.shift();
-        user.last_name = name_parts.join(' ');
-    } else {
-        user.first_name = data.first_name;
-        user.last_name = data.last_name;
-    }
-    user.identity_provider = "register";
-    if (req.session.referred_by) {
-        user.invited_by = req.session.referred_by;
-    }
-
-    /***
+    /**
      * Waterfall:
-     * 1) get user by email
-     * 2) save user
-     * 3) send activation mail
-     * 4) authenticate to log user in
+     * 1) register user
+     * 2) authenticate to log user in
      * Final) Render response
      */
     async.waterfall([
-        // 1) get user by email
-        function(cbk) {
-
-            var query = {email:new RegExp(user.email,'i')};
-
-            // find pattern of gmail emails where: somename+sometag@gmaildomain.any
-            // to prevent use emails with that pattern for registration
-            if (user.email.indexOf('+') > 0) {
-                var re = /(.*)\+.*@(.*)/ig;
-                var m = re.exec(user.email);
-                query = {$or: [ {email:m[1] + '@' + m[2]}, {email:new RegExp(m[1] + '\+.*@'+m[2])} ]};
-            }
-
-            models.User.findOne(query,cbk);
-
+        // 1) register the user
+        function (cbk) {
+            models.registerUser(req,
+            {
+                email: data.email,
+                first_name: data.first_name,
+                last_name: data.last_name,
+                full_name: data.full_name,
+                referred_by: req.session.referred_by,
+            }, next, cbk);
         },
-
-        // 2) save user
-        function(user_obj,cbk) {
-            if (!user_obj) {
-                user.save(function(err) {
-                    req.session.user = user;
-                    cbk(err);
-                });
-            }
-            else{
-                req.session.user = user_obj;
-                cbk('already_exists');
-            }
-        },
-
-        // 3) send activation mail
-        function(cbk) {
-            sendActivationMail(user, next,null,cbk);
-        },
-        // 4) authenticate to log user in
+        // 2) authenticate to log user in
         function(temp_password,cbk) {
             req.body['email'] = user.email;
             req.body['password'] = temp_password;
@@ -118,9 +79,10 @@ var registerUser = module.exports.registerUser = function(req,data,next,callback
                 cbk(err,is_authenticated);
             });
         }
-    ],
+        ],
         // Final) Render response
         function(err) {
-            callback(err,user);
-        });
-};
+            callback(err,{user: user, next: next});
+        }
+    );
+}
