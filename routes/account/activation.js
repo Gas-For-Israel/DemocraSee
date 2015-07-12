@@ -140,7 +140,9 @@ var sendActivationMail = module.exports.sendActivationMail = function(user,next,
             mail.sendMail(user.email, body, 'אימות חשבון באתר', cbk);
         }
     ],function(err) {
-        callback(err,temp_password);
+        if (callback && callback.call) {
+            callback(err,temp_password);
+        }
     });
 };
 
