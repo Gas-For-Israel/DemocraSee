@@ -34,7 +34,7 @@ config.registration_enabled = registration_enabled ? registration_enabled == 'tr
 config.MAIN_DISCUSSION = process.env['MAIN_DISCUSSION'] || '549ab39ada8a349714000026';
 
 config.DB_URL = process.env['MONGOLAB_URI'] || 'mongodb://localhost/idemos';
-config.ROOT_PATH = process.env.ROOT_PATH || 'http://localhost:1180';
-config.INDEX_PATH = process.env.INDEX_PATH || 'http://localhost:1180/tlv/index.html';
+config.ROOT_PATH = process.env.ROOT_PATH || ('http://localhost:' + (process.env.PORT ? process.env.PORT : '1080'));
+config.INDEX_PATH = process.env.INDEX_PATH || ('http://localhost:' + (process.env.PORT ? process.env.PORT : '1080') + '/tlv/index.html');
 
 module.exports = config;
