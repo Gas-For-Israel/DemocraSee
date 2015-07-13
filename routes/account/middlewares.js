@@ -5,6 +5,8 @@ var models = require('../../models')
 
 exports.referred_by_middleware = function(req,res,next)
 {
+    "use strict";
+
     if('referred_by' in req.query)
     {
         req.session.referred_by = req.query['referred_by'];
@@ -24,7 +26,7 @@ exports.referred_by_middleware = function(req,res,next)
                         var link = obj.link;
 
                         var parsed_link = url.parse(link);
-                        if(parsed_link.path != req.path) {
+                        if(parsed_link.path !== req.path) {
                             res.redirect(link);
                             return;
                         }
@@ -40,15 +42,17 @@ exports.referred_by_middleware = function(req,res,next)
 
             });
         }
-        else
+        else {
             next();
+        }
     }
 };
 
 
 exports.auth_middleware = function (req, res, next) {
+    "use strict";
     function isInArr(element, index, array) {
-        return (req.path.search(element) >= 0);
+        return req.path.search(element) >= 0;
     }
 
     if (req.isAuthenticated())
@@ -72,14 +76,18 @@ exports.auth_middleware = function (req, res, next) {
 
 
 exports.populate_user = function (req, res, next) {
+    "use strict";
     var user_id = req.session.user_id || (req.session.auth && req.session.auth.user && req.session.auth.user._id);
     models.User.findById(user_id, function (err, user) {
-        if (err) throw err;
+        if (err) {
+            throw err;
+        }
         if (!user) {
-            if (req.no_need_auth)
+            if (req.no_need_auth) {
                 next();
-            else
+            } else {
                 logout_handler(req, res);
+            }
             return;
         }
         req.user = user;
@@ -93,6 +101,6 @@ exports.populate_user = function (req, res, next) {
             }
             user.unseen_notifications = count;
             next();
-        })
+        });
     });
 };
