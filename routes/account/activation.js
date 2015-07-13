@@ -16,10 +16,11 @@ module.exports = {
 
         async.waterfall([
             function(cbk) {
-                if(!user_id || !code)
+                if(!user_id || !code) {
                     cbk('link');
-                else
+                } else {
                     cbk();
+                }
             },
             function(cbk) {
                 models.User.findById(user_id,cbk);
@@ -31,16 +32,17 @@ module.exports = {
                     return;
                 }
 
-                if(user.validation_code == code) {
+                if (user.validation_code === code) {
                     user.is_activated = true;
                   //  user.validation_code = '';
                     user.save(cbk);
                 }
-                else
+                else {
                     cbk('wrong code');
+                }
             }
         ], function(err) {
-            if(err)
+            if(err) {
                 res.render('activation.ejs',{
                     next: req.query.next,
                     title: "רישום",
@@ -48,9 +50,9 @@ module.exports = {
                     sent: err == 'link',
                     email:email || ''
                 });
-            else {
+            } else {
                 var redirect_to = typeof next !== 'undefined' && next ? next : common.DEFAULT_LOGIN_REDIRECT;
-                redirect_to = redirect_to.indexOf('?') > -1 ? redirect_to + '&is_new=activated' : redirect_to + '?is_new=activated';
+                redirect_to = redirect_to + (redirect_to.indexOf('?') > -1 ? '&' : '?') + 'is_new=activated';
                 res.redirect(redirect_to);
             }
         });
