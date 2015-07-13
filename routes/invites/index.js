@@ -8,18 +8,23 @@ function load(req, res)
 {
     if (req.files === undefined || req.files.file === undefined || req.files.file.path === undefined)
     {
-        return; // TODO: 404 / 500
+        console.log('invites load with no file');
+        res.redirect('/');
+        return;
     }
     var Invites = models.Invites;
     var count = 0; // async tool "waterfall" all things and then next one.
-    var emails = fs.readFileSync(req.files.file.path).toString().split('\n').map(function (x) { return x.trim(); }).filter(function (f) { return f.length > 0; })
+    var emails = fs.readFileSync(req.files.file.path)
+        .toString().split('\n')
+        .map(function (x) { return x.trim(); })
+        .filter(function (f) { return f.length > 0; });
     emails.forEach(function (email) {
         console.log('processing invite: ' + email);
         Invites.findOne({email: email}, function (err, obj) {
             if (obj !== null) {
                 console.log('Invite not created, exists: ' + email);
             } else {
-                var invite = new Invites;
+                var invite = new Invites();
                 invite.email = email;
                 invite.sent = false;
                 invite.save();
