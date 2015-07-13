@@ -16,7 +16,7 @@ formage_admin.forms.loadTypes(mongoose);
 
 
 var app = module.exports = express();
-app.set('show_only_published', process.env.SHOW_ONLY_PUBLISHED == '1');
+app.set('show_only_published', process.env.SHOW_ONLY_PUBLISHED === '1');
 utils.setShowOnlyPublished(app.settings.show_only_published);
 
 var logout_handler = require("connect-auth/lib/events").redirectOnLogout("/discussions");
@@ -187,7 +187,7 @@ app.locals({
 
 app.locals({
     writeHead: function(name) {
-        var isDev = app.settings.env == 'development' || app.settings.env == 'staging';
+        var isDev = app.settings.env === 'development' || app.settings.env === 'staging';
         function headFromSrc(src, type) {
             switch (type) {
                 case 'js':
@@ -206,7 +206,7 @@ app.locals({
                     return headFromSrc(src, type);
                 }).join('\n');
         else {
-            var final = conf.final || ( conf.min === false || type == 'css' ? '/dist/' + type + '/' + conf.name + '.' + type : '/dist/' + type + '/' + conf.name + '.min.' + type);
+            var final = conf.final || ( conf.min === false || type === 'css' ? '/dist/' + type + '/' + conf.name + '.' + type : '/dist/' + type + '/' + conf.name + '.min.' + type);
             return headFromSrc(final, type);
         }
     }
@@ -214,7 +214,7 @@ app.locals({
 // ######### locals #########
 
 // ######### environment specific settings #########
-if ('development' == app.get('env')) {
+if ('development' === app.get('env')) {
     require('./admin')(app);
     app.set('send_mails', true);
 }
