@@ -60,11 +60,12 @@ exports.auth_middleware = function (req, res, next) {
 
     if (isInArr("mail_settings")) return res.redirect(common.LOGIN_PATH + '?next=' + req.path);
 
-    // todo this always return true (search fails returns with -1)
-    if (common.DONT_NEED_LOGIN_PAGES.some(req.path.search, req.path)) {
+    if (common.DONT_NEED_LOGIN_PAGES.some(function (x) { return req.path.search(x, req.path) !== -1; })) {
         req.no_need_auth = true;
         console.log('skipped auth for %s', req.url);
         return next();
+    } else {
+        console.log('redirecting for auth for %s', req.url);
     }
 
     if (common.REDIRECT_FOR_LOGIN_PAGES.some(req.path.search, req.path)) {
