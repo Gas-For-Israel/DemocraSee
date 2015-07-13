@@ -29,7 +29,7 @@ config.system_email = process.env['DEMOCRASEE_SYSTEM_EMAIL'] || 'democrasee@exam
 
 // global registration enable / disable. invitation is the alternate mechanism.
 registration_enabled = process.env['DEMOCRASEE_REGISTRATION_ENABLED']
-config.registration_enabled = registration_enabled ? registration_enabled == 'true' : false;
+config.registration_enabled = registration_enabled ? registration_enabled != 'false' : true;
 
 config.MAIN_DISCUSSION = process.env['MAIN_DISCUSSION'] || '549ab39ada8a349714000026';
 
