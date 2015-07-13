@@ -1,10 +1,10 @@
 "use strict"
 
 var models = require('../../models')
-    ,sendActivationMail = require('./activation').sendActivationMail
     ,async = require('async')
     ,common = require('./common')
-    ,config = require('../../config');
+    ,config = require('../../config'),
+    register_user = require('../../register_user');
 
 module.exports = {
     post:function (req, res) {
@@ -49,6 +49,7 @@ module.exports = {
  * function(err,user)
  */
 var registerUser = module.exports.registerUser = function(req,data,next,callback) {
+    var user;
     if (!config.registration_enabled) {
         callback('אינך מורשה להרשם לאתר זה');
         return;
@@ -62,7 +63,7 @@ var registerUser = module.exports.registerUser = function(req,data,next,callback
     async.waterfall([
         // 1) register the user
         function (cbk) {
-            models.registerUser(req,
+            register_user(req,
             {
                 email: data.email,
                 first_name: data.first_name,
@@ -72,9 +73,11 @@ var registerUser = module.exports.registerUser = function(req,data,next,callback
             }, next, cbk);
         },
         // 2) authenticate to log user in
-        function(temp_password,cbk) {
-            req.body['email'] = user.email;
-            req.body['password'] = temp_password;
+        function(data, cbk) {
+            var temp_password = data.temp_password;
+            user = data.user;
+            req.body.email = user.email;
+            req.body.password = temp_password;
             req.authenticate('simple',function(err,is_authenticated) {
                 cbk(err,is_authenticated);
             });

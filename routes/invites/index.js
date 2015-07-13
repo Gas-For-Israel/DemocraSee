@@ -1,7 +1,8 @@
 "use strict"
 
 var fs = require('fs'),
-    models = require('../../models');
+    models = require('../../models'),
+    register_user = require('../../register_user');
 
 function load(req, res)
 {
@@ -38,7 +39,7 @@ function invite(req, res)
         invites.forEach(function (invite) {
             invite.sent = true;
             invite.save();
-            models.registerUser(undefined, {email: invite.email, full_name: invite.email});
+            register_user(undefined, {email: invite.email, full_name: invite.email});
         });
         res.redirect('/admin/model/Invites');
     });

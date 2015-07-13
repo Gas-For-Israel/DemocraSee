@@ -141,7 +141,7 @@ var sendActivationMail = module.exports.sendActivationMail = function(user,next,
         }
     ],function(err) {
         if (callback && callback.call) {
-            callback(err,temp_password);
+            callback(err, {user: user, temp_password: temp_password});
         }
     });
 };
